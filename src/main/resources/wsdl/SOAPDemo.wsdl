@@ -1,0 +1,88 @@
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:s="http://www.w3.org/2001/XMLSchema"
+             xmlns:s0="http://tempuri.org"
+             targetNamespace="http://tempuri.org">
+
+    <types>
+        <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org">
+            <s:element name="FindPerson">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" name="id" type="s:string"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="FindPersonResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element name="FindPersonResult" type="s0:Person"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:complexType name="Person">
+                <s:sequence>
+                    <s:element name="Name" type="s:string"/>
+                    <s:element name="SSN" type="s:string"/>
+                    <s:element minOccurs="0" name="DOB" type="s:date"/>
+                    <s:element minOccurs="0" name="Age" type="s:long"/>
+                    <!-- Definición de la dirección de casa -->
+                    <s:element minOccurs="0" name="Home" type="s0:Address"/>
+                    <!-- Definición de la dirección de la oficina -->
+                    <s:element minOccurs="0" name="Office" type="s0:Address"/>
+                    <!-- Definición de los colores favoritos -->
+                    <s:element minOccurs="0" name="FavoriteColors" type="s0:ArrayOfFavoriteColorsItemString"/>
+                </s:sequence>
+            </s:complexType>
+            <!-- Definición de la estructura de Address -->
+            <s:complexType name="Address">
+                <s:sequence>
+                    <s:element name="Street" type="s:string"/>
+                    <s:element name="City" type="s:string"/>
+                    <s:element name="State" type="s:string"/>
+                    <s:element name="Zip" type="s:string"/>
+                </s:sequence>
+            </s:complexType>
+            <!-- Definición de la estructura de los colores favoritos -->
+            <s:complexType name="ArrayOfFavoriteColorsItemString">
+                <s:sequence>
+                    <s:element maxOccurs="unbounded" minOccurs="0" name="FavoriteColorsItem" nillable="true" type="s:string"/>
+                </s:sequence>
+            </s:complexType>
+        </s:schema>
+    </types>
+
+    <message name="FindPersonSoapIn">
+        <part name="parameters" element="s0:FindPerson"/>
+    </message>
+    <message name="FindPersonSoapOut">
+        <part name="parameters" element="s0:FindPersonResponse"/>
+    </message>
+
+    <portType name="SOAPDemoSoap">
+        <operation name="FindPerson">
+            <input message="s0:FindPersonSoapIn"/>
+            <output message="s0:FindPersonSoapOut"/>
+        </operation>
+    </portType>
+
+    <binding name="SOAPDemoSoap" type="s0:SOAPDemoSoap">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <operation name="FindPerson">
+            <soap:operation soapAction="http://tempuri.org/SOAP.Demo.FindPerson" style="document"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+
+    <service name="SOAPDemo">
+        <port name="SOAPDemoSoap" binding="s0:SOAPDemoSoap">
+            <soap:address location="https://www.crcind.com:443/csp/samples/SOAP.Demo.cls"/>
+        </port>
+    </service>
+</definitions>
